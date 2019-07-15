@@ -1,0 +1,16 @@
+--- node_modules/jasmine-core/lib/jasmine-core/jasmine.js.orig	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/jasmine-core/lib/jasmine-core/jasmine.js	2019-07-15 13:35:26.000000000 +0200
+@@ -3196,7 +3196,12 @@
+       var handler = handlers[handlers.length - 1];
+ 
+       if (handler) {
+-        handler.apply(null, Array.prototype.slice.call(arguments, 0));
++        // Get error from (message, source, lineno, colno, error)
++        var args = Array.prototype.slice.call(arguments, 0);
++        var error = args.find(function(arg) {
++          return arg instanceof Error;
++        });
++        handler.apply(null, error ? [error] : args);
+       } else {
+         throw arguments[0];
+       }
